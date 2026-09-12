@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Octopus — Every invoice gets an owner</title>
+<meta name="description" content="Octopus is an accounts receivable teammate that works out what is blocking payment on every unpaid invoice, prepares the next action, and follows up until the case is resolved. Now recruiting design partners among outsourced accounting and AR firms.">
+<meta name="author" content="Octopus">
+<link rel="canonical" href="https://codangels.github.io/invoice_r_us/">
+
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Octopus">
+<meta property="og:title" content="Octopus — Every invoice gets an owner">
+<meta property="og:description" content="An accounts receivable teammate that works out what is blocking payment, prepares the next action, and follows up until the case is resolved.">
+<meta property="og:url" content="https://codangels.github.io/invoice_r_us/">
+<meta property="og:image" content="https://codangels.github.io/invoice_r_us/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Octopus — Every invoice gets an owner">
+<meta name="twitter:description" content="An accounts receivable teammate that works out what is blocking payment, prepares the next action, and follows up until the case is resolved.">
+<meta name="twitter:image" content="https://codangels.github.io/invoice_r_us/assets/og-card.png">
+
+<style>
+  :root {
+    --paper:        #FFFFFF;
+    --paper-raised: #FFFFFF;
+    --paper-sunk:   #F7F9FC;
+    --ink:          #0F2340;
+    --ink-soft:     #42566F;
+    --ink-faint:    #7285A0;
+    --rule:         #E1E7F0;
+    --rule-strong:  #C2CDDD;
+    --accent:       #3340B5;
+    --accent-ink:   #242E85;
+    --accent-wash:  #EDEEFB;
+    --warn:         #8A6412;
+    --warn-wash:    #F6EEDC;
+    --crit:         #A32121;
+    --crit-wash:    #F8E8E6;
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "URW Palladio L", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, "Liberation Mono", monospace;
+
+    --gutter: clamp(1.25rem, 5vw, 3.5rem);
+    --col: 1080px;
+    --prose: 63ch;
+
+    /* Deliberately single-theme: this page is outbound collateral and must
+       look identical on every prospect's screen. White paper, navy ink. */
+    color-scheme: light;
+  }
+
+  /* No dark-theme overrides by design — the tokens above are the only palette,
+     so a viewer's OS setting cannot repaint this page. */
+
+  * { box-sizing: border-box; }
+
+  html {
+    background: #FFFFFF;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img { display: block; max-width: 100%; height: auto; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: .7rem 1rem;
+    font-family: var(--mono);
+    font-size: .78rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    z-index: 10;
+  }
+  .skip:focus { left: 0; }
+
+  .wrap {
+    max-width: var(--col);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead { border-bottom: 1px solid var(--rule); }
+  .masthead-in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: .95rem;
+  }
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .mark img { width: 38px; height: 38px; }
+  .mark-name {
+    font-family: var(--mono);
+    font-size: .82rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .mark-tag {
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  /* ---------- shared type ---------- */
+
+  h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 600; }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.6rem, 7.2vw, 4.4rem);
+    line-height: 1.02;
+    letter-spacing: -.02em;
+    font-weight: 500;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.65rem, 3.4vw, 2.25rem);
+    line-height: 1.14;
+    letter-spacing: -.012em;
+    font-weight: 500;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-size: 1rem;
+    line-height: 1.35;
+    letter-spacing: -.003em;
+  }
+
+  p { margin: 0; }
+  .prose { max-width: var(--prose); }
+  .lede { font-size: 1.18rem; line-height: 1.5; color: var(--ink-soft); }
+  .soft { color: var(--ink-soft); }
+  .faint { color: var(--ink-faint); }
+  .small { font-size: .9rem; line-height: 1.55; }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: var(--accent);
+    flex: none;
+  }
+
+  .amt, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  /* ---------- sections ---------- */
+
+  .band { border-top: 1px solid var(--rule); }
+  .band-in {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+  .band-head { display: flex; flex-direction: column; gap: .85rem; }
+
+  /* ---------- hero ---------- */
+
+  .hero-in {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2rem, 5vw, 3rem);
+  }
+  .hero-sub { max-width: 56ch; }
+  .hero-claim {
+    font-family: var(--serif);
+    font-size: 1.06rem;
+    font-style: italic;
+    color: var(--accent-ink);
+    max-width: 52ch;
+  }
+  .cta-row { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-top: .4rem; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: var(--mono);
+    font-size: .78rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none;
+    padding: .85rem 1.3rem;
+    border: 1px solid var(--accent);
+    transition: background .18s ease, color .18s ease, transform .18s ease;
+  }
+  .btn-solid { background: var(--accent); color: #FFFFFF; }
+  .btn-solid:hover { background: var(--accent-ink); border-color: var(--accent-ink); transform: translateY(-1px); }
+  .btn-line { color: var(--accent-ink); background: transparent; }
+  .btn-line:hover { background: var(--accent-wash); transform: translateY(-1px); }
+
+  /* ---------- case queue rail ---------- */
+
+  .rail-frame { display: flex; flex-direction: column; gap: .7rem; }
+  .rail-label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .5rem;
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: .55rem;
+  }
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  @media (max-width: 880px) { .rail { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 480px) { .rail { grid-template-columns: 1fr; } }
+
+  .chip {
+    background: var(--paper-raised);
+    padding: .9rem .95rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+    /* Visible by default. The reveal runs `backwards`, so the faded state only
+       ever applies *during* the animation — if animations are disabled, blocked
+       or the page is printed, the cases still render. Never gate content on
+       motion. */
+    opacity: 1;
+    animation: rise .5s cubic-bezier(.2, .7, .3, 1) backwards;
+  }
+  .chip:nth-child(1) { animation-delay: .05s; }
+  .chip:nth-child(2) { animation-delay: .11s; }
+  .chip:nth-child(3) { animation-delay: .17s; }
+  .chip:nth-child(4) { animation-delay: .23s; }
+  .chip:nth-child(5) { animation-delay: .29s; }
+  .chip:nth-child(6) { animation-delay: .35s; }
+  .chip:nth-child(7) { animation-delay: .41s; }
+  .chip:nth-child(8) { animation-delay: .47s; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .chip-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .5rem;
+    font-size: .74rem;
+    color: var(--ink-faint);
+  }
+  .chip-co { font-size: .93rem; font-weight: 600; color: var(--ink); line-height: 1.25; }
+  .chip-amt { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; }
+  .chip-block { font-size: .82rem; color: var(--ink-soft); line-height: 1.4; }
+
+  .pill {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: .63rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: .22rem .5rem;
+    border-radius: 2px;
+  }
+  .pill-crit { color: var(--crit); background: var(--crit-wash); }
+  .pill-warn { color: var(--warn); background: var(--warn-wash); }
+  .pill-good { color: var(--accent-ink); background: var(--accent-wash); }
+  .pill-flat { color: var(--ink-faint); background: var(--paper-sunk); }
+
+  /* ---------- blocker list ---------- */
+
+  .blockers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border-block: 1px solid var(--rule);
+  }
+  .blocker {
+    background: var(--paper);
+    padding: 1.05rem 1.05rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+  }
+  .blocker-name { font-weight: 600; font-size: .95rem; }
+  .blocker-body { font-size: .88rem; color: var(--ink-soft); line-height: 1.5; }
+
+  /* ---------- anatomy card ---------- */
+
+  .case {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule-strong);
+    display: flex;
+    flex-direction: column;
+  }
+  .case-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .4rem .9rem;
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-sunk);
+  }
+  .case-inv { font-family: var(--mono); font-size: .84rem; font-weight: 700; letter-spacing: .04em; }
+  .case-co { font-weight: 600; }
+  .case-amt { margin-left: auto; font-weight: 600; color: var(--crit); font-size: 1.05rem; }
+  .case-rows { display: flex; flex-direction: column; }
+  .case-row {
+    display: grid;
+    grid-template-columns: 128px 1fr;
+    gap: .2rem 1rem;
+    padding: .9rem 1.2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .case-row:last-child { border-bottom: 0; }
+  @media (max-width: 560px) { .case-row { grid-template-columns: 1fr; } }
+  .case-key {
+    font-family: var(--mono);
+    font-size: .66rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: .22rem;
+    font-weight: 700;
+  }
+  .case-val { font-size: .97rem; line-height: 1.45; }
+  .case-note { font-size: .84rem; color: var(--ink-faint); display: block; margin-top: .15rem; }
+
+  /* ---------- rule block ---------- */
+
+  .ruleblock {
+    background: var(--paper-sunk);
+    border-left: 3px solid var(--accent);
+    padding: 1.1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: .86rem;
+    line-height: 1.75;
+    overflow-x: auto;
+  }
+  .ruleblock-line { display: flex; gap: 1rem; white-space: nowrap; }
+  .ruleblock-op { width: 4.5rem; flex: none; color: var(--accent); font-weight: 700; }
+  .ruleblock-hd { color: var(--ink); font-weight: 700; letter-spacing: .06em; margin-bottom: .45rem; white-space: nowrap; }
+
+  /* ---------- ladder ---------- */
+
+  .ladder {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  @media (max-width: 780px) { .ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 420px) { .ladder { grid-template-columns: 1fr; } }
+  .rung {
+    background: var(--paper-raised);
+    padding: .9rem .95rem 1.05rem;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+  }
+  .rung-n {
+    font-family: var(--mono);
+    font-size: .66rem;
+    letter-spacing: .14em;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .rung-name { font-weight: 600; font-size: .95rem; }
+  .rung-body { font-size: .84rem; color: var(--ink-soft); line-height: 1.45; }
+  .rung-now { background: var(--accent-wash); }
+
+  /* ---------- access table ---------- */
+
+  .table-scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: .92rem; }
+  th, td { text-align: left; padding: .75rem 1rem .75rem 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th {
+    font-family: var(--mono);
+    font-size: .66rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 700;
+    border-bottom-color: var(--rule-strong);
+  }
+  td:first-child { font-weight: 600; width: 30%; }
+  td.grant { font-family: var(--mono); font-size: .8rem; color: var(--accent-ink); width: 24%; }
+  td.deny { font-family: var(--mono); font-size: .8rem; color: var(--crit); width: 24%; }
+  tr:last-child td { border-bottom: 0; }
+
+  /* ---------- report ---------- */
+
+  .report { border: 1px solid var(--rule-strong); background: var(--paper-raised); }
+  .report-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem .9rem;
+    align-items: baseline;
+    padding: .7rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-sunk);
+    font-family: var(--mono);
+    font-size: .66rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .report-flag { color: var(--warn); font-weight: 700; }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--rule);
+  }
+  @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .stat { background: var(--paper-raised); padding: 1.05rem 1.1rem 1.15rem; display: flex; flex-direction: column; gap: .18rem; }
+  .stat-v { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 1.65rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
+  .stat-k { font-size: .8rem; color: var(--ink-soft); line-height: 1.35; }
+  .report-quote {
+    padding: 1rem 1.1rem 1.15rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--serif);
+    font-size: 1.02rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  /* ---------- firm points ---------- */
+
+  .points { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+  .point {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    padding: 1rem 0 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .point-name { font-weight: 600; font-size: 1rem; }
+  .point-body { font-size: .93rem; color: var(--ink-soft); line-height: 1.55; max-width: 68ch; }
+
+  /* ---------- terms ---------- */
+
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .term { background: var(--paper-raised); padding: 1rem 1.05rem 1.1rem; display: flex; flex-direction: column; gap: .25rem; }
+  .term-v { font-family: var(--mono); font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em; }
+  .term-k { font-size: .85rem; color: var(--ink-soft); line-height: 1.4; }
+
+  .honest {
+    border-left: 3px solid var(--rule-strong);
+    padding: .35rem 0 .35rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    max-width: 68ch;
+  }
+
+  /* ---------- close ---------- */
+
+  .close-in {
+    display: flex;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    align-items: flex-start;
+    padding-block: clamp(3.2rem, 7vw, 5rem);
+  }
+  .close-copy { display: flex; flex-direction: column; gap: 1.2rem; flex: 1 1 auto; }
+  .close-logo { width: 148px; flex: none; }
+  @media (max-width: 700px) { .close-logo { display: none; } }
+
+  .ask { display: flex; flex-direction: column; gap: .55rem; max-width: 62ch; }
+  .ask-item { display: flex; gap: .8rem; font-size: .97rem; line-height: 1.5; }
+  .ask-n {
+    font-family: var(--mono);
+    font-size: .72rem;
+    color: var(--accent);
+    font-weight: 700;
+    padding-top: .28rem;
+    flex: none;
+  }
+
+  .colophon {
+    border-top: 1px solid var(--rule);
+    padding-block: 1.6rem 2.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem 1.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .colophon a { color: var(--accent-ink); text-decoration: none; }
+  .colophon a:hover { text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .chip { opacity: 1; animation: none; }
+    * { transition: none !important; }
+  }
+
+  @media print {
+    .chip { opacity: 1; animation: none; }
+    .btn { border-color: var(--rule-strong); color: var(--ink); background: none; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="wrap masthead-in">
+    <a class="mark" href="#become-a-partner">
+      <img src="assets/octopus.png" width="38" height="38" alt="Octopus logo">
+      <span class="mark-name">Octopus</span>
+    </a>
+    <span class="mark-tag">Design partner program<br>Open — Fall 2026</span>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="wrap hero-in">
+    <p class="eyebrow">For outsourced accounting &amp; AR firms</p>
+    <h1>Every invoice gets an owner.</h1>
+    <p class="lede hero-sub">
+      Octopus is an accounts receivable teammate that keeps track of every unpaid invoice,
+      works out what is blocking payment, prepares the next action, and keeps following up
+      until the case is resolved.
+    </p>
+    <p class="hero-claim">
+      A finance employee has two hands. This teammate has eight — and each one keeps hold of
+      a receivable without letting the case disappear.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-solid" href="#become-a-partner">Become a design partner</a>
+      <a class="btn btn-line" href="#what-we-ask">See what we're asking</a>
+    </div>
+  </section>
+
+  <!-- ============ CASE QUEUE ============ -->
+  <section class="wrap" style="padding-bottom: clamp(2.5rem, 6vw, 4rem);">
+    <div class="rail-frame">
+      <div class="rail-label">
+        <span>Illustrative case queue — one client account</span>
+        <span>8 open cases · $117,195 outstanding</span>
+      </div>
+      <div class="rail">
+
+        <article class="chip">
+          <div class="chip-top"><span class="num">#18372</span><span>62 days</span></div>
+          <div class="chip-co">ACME Corp</div>
+          <div class="chip-amt amt">$18,420</div>
+          <div class="chip-block">PO 88219 must appear on the invoice before AP will process it.</div>
+          <span class="pill pill-crit">Blocked</span>
+        </article>
+
+        <article class="chip">
+          <div class="chip-top"><span class="num">#18344</span><span>48 days</span></div>
+          <div class="chip-co">Belmont Facilities</div>
+          <div class="chip-amt amt">$6,180</div>
+          <div class="chip-block">AP never received it — original went to a contact who left.</div>
+          <span class="pill pill-crit">Blocked</span>
+        </article>
+
+        <article class="chip">
+          <div class="chip-top"><span class="num">#18291</span><span>41 days</span></div>
+          <div class="chip-co">Ridgeline Staffing</div>
+          <div class="chip-amt amt">$24,900</div>
+          <div class="chip-block">Controller committed to paying on Sep 19. Verify on Sep 22.</div>
+          <span class="pill pill-good">Promised</span>
+        </article>
+
+        <article class="chip">
+          <div class="chip-top"><span class="num">#18255</span><span>39 days</span></div>
+          <div class="chip-co">Harbor MSP Group</div>
+          <div class="chip-amt amt">$3,475</div>
+          <div class="chip-block">Vendor onboarding needs a current W-9 before release.</div>
+          <span class="pill pill-flat">Drafted</span>
+        </article>
+
+        <article class="chip">
+          <div class="chip-top"><span class="num">#18240</span><span>35 days</span></div>
+          <div class="chip-co">Cortez Wholesale</div>
+          <div class="chip-amt amt">$11,060</div>
+          <div class="chip-block">Disputes the quantity on line 3. Needs a human decision.</div>
+          <span class="pill pill-warn">Paused</span>
+        </article>
+
+        <article class="chip">
+          <div class="chip-top"><span class="num">#18198</span><span>29 days</span></div>
+          <div class="chip-co">Sunbelt Mechanical</div>
+          <div class="chip-amt amt">$9,320</div>
+          <div class="chip-block">Customer says the scope changed. Waiting on Sales to confirm.</div>
+          <span class="pill pill-warn">Waiting</span>
+        </article>
+
+        <article class="chip">
+          <div class="chip-top"><span class="num">#18177</span><span>24 days</span></div>
+          <div class="chip-co">Vista Grounds Co.</div>
+          <div class="chip-amt amt">$2,140</div>
+          <div class="chip-block">Asked for a full statement before releasing the batch.</div>
+          <span class="pill pill-flat">Drafted</span>
+        </article>
+
+        <article class="chip">
+          <div class="chip-top"><span class="num">#18102</span><span>18 days</span></div>
+          <div class="chip-co">Keystone Logistics</div>
+          <div class="chip-amt amt">$41,700</div>
+          <div class="chip-block">ACH scheduled for Sep 14. Follow-up cancels itself if it lands.</div>
+          <span class="pill pill-good">Promised</span>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROBLEM ============ -->
+  <section class="band">
+    <div class="wrap band-in">
+      <div class="band-head">
+        <p class="eyebrow">The problem</p>
+        <h2>The hard part starts after the invoice goes overdue.</h2>
+        <p class="prose soft">
+          Every AR system you own is good at telling you an invoice is late. None of them do the work that
+          comes next: figure out <em>why</em> the customer hasn't paid, dig through email and the ledger for
+          context, decide the next action, chase the right person, remember the date they promised, and
+          come back to check.
+        </p>
+        <p class="prose soft">
+          Invoices don't simply become overdue. They get stuck — behind a missing PO, a wrong contact, a
+          dispute, a forgotten promise, a document nobody sent, or a teammate who never replied.
+        </p>
+      </div>
+
+      <div class="blockers">
+        <div class="blocker">
+          <span class="blocker-name">Missing PO</span>
+          <span class="blocker-body">AP won't process the invoice until a purchase-order number is referenced on it.</span>
+        </div>
+        <div class="blocker">
+          <span class="blocker-name">Invoice not received</span>
+          <span class="blocker-body">They want another copy, or it went to a contact who no longer works there.</span>
+        </div>
+        <div class="blocker">
+          <span class="blocker-name">Promise to pay</span>
+          <span class="blocker-body">"It goes out Friday." Somebody has to actually check on Monday.</span>
+        </div>
+        <div class="blocker">
+          <span class="blocker-name">Dispute</span>
+          <span class="blocker-body">Quantity, pricing or whether the work was finished. A person has to resolve it.</span>
+        </div>
+        <div class="blocker">
+          <span class="blocker-name">Documentation request</span>
+          <span class="blocker-body">A W-9, a statement, a supporting document, or a corrected invoice.</span>
+        </div>
+        <div class="blocker">
+          <span class="blocker-name">Internal dependency</span>
+          <span class="blocker-body">Collections can't answer until Sales or Operations weighs in.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE CASE ============ -->
+  <section class="band">
+    <div class="wrap band-in">
+      <div class="band-head">
+        <p class="eyebrow">The concept</p>
+        <h2>A live case for every unpaid invoice.</h2>
+        <p class="prose soft">
+          Octopus opens a Collection Case per invoice, and that case owns the workflow until the balance
+          settles. The ledger and the inbox are inputs. The blocker, the next action, the follow-up and the
+          resolution are what comes out.
+        </p>
+      </div>
+
+      <article class="case">
+        <div class="case-head">
+          <span class="case-inv">INVOICE #18372</span>
+          <span class="case-co">ACME Corp</span>
+          <span class="case-amt amt">$18,420 overdue</span>
+        </div>
+        <div class="case-rows">
+          <div class="case-row">
+            <span class="case-key">Blocker</span>
+            <span class="case-val">Customer requested that PO 88219 be referenced on the invoice.
+              <span class="case-note">Read from a reply in the AR inbox on Sep 4.</span></span>
+          </div>
+          <div class="case-row">
+            <span class="case-key">Next action</span>
+            <span class="case-val">Update the invoice and resend to AP.
+              <span class="case-note">Drafted and waiting in your queue — nothing sends on its own.</span></span>
+          </div>
+          <div class="case-row">
+            <span class="case-key">Follow-up</span>
+            <span class="case-val">Sep 15, only if the balance is still open and no newer reply has arrived.</span>
+          </div>
+          <div class="case-row">
+            <span class="case-key">State</span>
+            <span class="case-val"><span class="pill pill-warn" style="margin-right:.5rem;">Waiting</span>Internal approval on the corrected invoice.</span>
+          </div>
+        </div>
+      </article>
+
+      <p class="prose small faint">
+        Illustrative case. Invoice numbers, customers and amounts on this page are examples, not
+        results from a live account.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CONDITIONAL FOLLOW-UPS ============ -->
+  <section class="band">
+    <div class="wrap band-in">
+      <div class="band-head">
+        <p class="eyebrow">Why this isn't a reminder tool</p>
+        <h2>Follow-ups expire when they stop being true.</h2>
+        <p class="prose soft">
+          A calendar reminder fires whether or not it still makes sense — which is how customers get chased
+          for invoices they already paid. An Octopus follow-up stays alive only while its conditions hold.
+        </p>
+      </div>
+
+      <div class="ruleblock">
+        <div class="ruleblock-hd">FOLLOW UP · SEP 15 · INVOICE #18372</div>
+        <div class="ruleblock-line"><span class="ruleblock-op">ONLY IF</span><span>balance due &gt; $0.00</span></div>
+        <div class="ruleblock-line"><span class="ruleblock-op">AND</span><span>no newer customer response</span></div>
+        <div class="ruleblock-line"><span class="ruleblock-op">AND</span><span>invoice not voided</span></div>
+        <div class="ruleblock-line"><span class="ruleblock-op">AND</span><span>case not paused for dispute</span></div>
+      </div>
+
+      <p class="prose soft">
+        If it gets paid, voided, disputed or the customer writes back first, the scheduled action
+        re-evaluates or cancels itself. Nobody on your team has to remember to call it off.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ TRUST ============ -->
+  <section class="band">
+    <div class="wrap band-in">
+      <div class="band-head">
+        <p class="eyebrow">Access &amp; control</p>
+        <h2>It reads your client's books. It does not run them.</h2>
+        <p class="prose soft">
+          You are the one holding the relationship and the fiduciary duty, so the early product earns trust
+          in steps. It does not need autonomous control of financial records to be useful on day one.
+        </p>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">System</th>
+              <th scope="col">What it gets</th>
+              <th scope="col">What it never gets</th>
+              <th scope="col">Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>QuickBooks / accounting</td>
+              <td class="grant">Read-only</td>
+              <td class="deny">No writes</td>
+              <td>Invoices, balances, due dates, customer records and payment state.</td>
+            </tr>
+            <tr>
+              <td>Gmail / Outlook</td>
+              <td class="grant">Read + draft</td>
+              <td class="deny">No sending</td>
+              <td>Understand replies and prepare responses for a person to review.</td>
+            </tr>
+            <tr>
+              <td>Invoice modification</td>
+              <td class="grant">Recommend only</td>
+              <td class="deny">No autonomous edits</td>
+              <td>It proposes the correction; a human makes it, until you say otherwise.</td>
+            </tr>
+            <tr>
+              <td>Payments</td>
+              <td class="grant">Observe settlement</td>
+              <td class="deny">No payment authority</td>
+              <td>Sees the balance clear, then closes the case and kills future follow-ups.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="band-head" style="margin-top:.8rem;">
+        <h3>The trust ladder</h3>
+        <p class="prose small soft">Autonomy should expand because you ask for it, not because the architecture allows it.</p>
+      </div>
+
+      <div class="ladder">
+        <div class="rung rung-now">
+          <span class="rung-n">STEP 1</span>
+          <span class="rung-name">Read</span>
+          <span class="rung-body">See the ledger and the thread.</span>
+        </div>
+        <div class="rung rung-now">
+          <span class="rung-n">STEP 2</span>
+          <span class="rung-name">Recommend</span>
+          <span class="rung-body">Name the blocker and the next action.</span>
+        </div>
+        <div class="rung rung-now">
+          <span class="rung-n">STEP 3</span>
+          <span class="rung-name">Draft</span>
+          <span class="rung-body">Write the reply, leave it unsent.</span>
+        </div>
+        <div class="rung">
+          <span class="rung-n">STEP 4</span>
+          <span class="rung-name">Human approval</span>
+          <span class="rung-body">Your staff releases every action.</span>
+        </div>
+        <div class="rung">
+          <span class="rung-n">STEP 5</span>
+          <span class="rung-name">Limited automation</span>
+          <span class="rung-body">Only the low-risk actions you nominate.</span>
+        </div>
+      </div>
+      <p class="small faint">Steps 1–3 are where a design partner starts. Steps 4 and 5 are opt-in, per client account.</p>
+    </div>
+  </section>
+
+  <!-- ============ FOR FIRMS ============ -->
+  <section class="band">
+    <div class="wrap band-in">
+      <div class="band-head">
+        <p class="eyebrow">Why we're starting with firms</p>
+        <h2>You work receivables for a dozen businesses at once.</h2>
+        <p class="prose soft">
+          A single company sees its own aging report. Your firm sees a dozen of them, across different
+          industries, with different customers who get stuck in different ways. That makes you the fastest
+          way to learn what this workflow actually looks like — and the hardest customer to fool.
+        </p>
+      </div>
+
+      <div class="points">
+        <div class="point">
+          <span class="point-name">One case queue per client, kept separate</span>
+          <span class="point-body">Separate connections, separate books, separate inboxes. Nothing crosses between client accounts.</span>
+        </div>
+        <div class="point">
+          <span class="point-name">Your staff stays the approver</span>
+          <span class="point-body">Drafts land in a queue for a person on your team. Your name is still the one on the email your client's customer receives.</span>
+        </div>
+        <div class="point">
+          <span class="point-name">A month-end artifact you can hand to the client</span>
+          <span class="point-body">Cases closed, cash collected, average resolution time, promises still outstanding — a record of the work, separated from credits, write-offs and duplicates.</span>
+        </div>
+        <div class="point">
+          <span class="point-name">Built around the cases that need a human</span>
+          <span class="point-body">Disputes and internal dependencies get escalated, not chased. The teammate is there to clear the routine ones so your people spend their hours on the rest.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section class="band">
+    <div class="wrap band-in">
+      <div class="band-head">
+        <p class="eyebrow">Proving it worked</p>
+        <h2>The monthly report should survive a client asking "what did we pay for?"</h2>
+        <p class="prose soft">
+          Every case keeps the actions taken before it resolved, so month-end is a record of work rather
+          than a dashboard. Paid and recovered cases are counted separately from credits, write-offs,
+          cancellations and duplicates.
+        </p>
+      </div>
+
+      <div class="report">
+        <div class="report-bar">
+          <span>Month-end summary — one client account</span>
+          <span class="report-flag">Illustrative · not customer results</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><span class="stat-v">58</span><span class="stat-k">Cases closed</span></div>
+          <div class="stat"><span class="stat-v">$126K</span><span class="stat-k">Cash collected from closed cases</span></div>
+          <div class="stat"><span class="stat-v">8.4d</span><span class="stat-k">Average resolution time</span></div>
+          <div class="stat"><span class="stat-v">$38.9K</span><span class="stat-k">Promises to pay outstanding</span></div>
+        </div>
+        <p class="report-quote">
+          "Octopus worked 74 receivable cases this month. 41 paid cases closed for $126,420. Average
+          resolution time was 8.4 days. Twelve promises to pay worth $38,900 remain active, and six cases
+          require human attention."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HONEST STATUS ============ -->
+  <section class="band">
+    <div class="wrap band-in">
+      <div class="band-head">
+        <p class="eyebrow">Where this actually stands</p>
+        <h2>This is not a finished product, and we're not going to pretend it is.</h2>
+      </div>
+      <div class="honest">
+        <p class="soft">
+          Octopus is pre-launch. Everything on this page is the workflow we intend to build, described
+          honestly — not a feature list you can log into this afternoon. The numbers above are examples.
+        </p>
+        <p class="soft">
+          We're doing the market investigation before the product hardens around assumptions, because the
+          engineering is not the scarce resource here. Understanding how receivables are genuinely worked
+          today is. That's the whole reason we're calling firms first.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ASK + TERMS ============ -->
+  <section class="band" id="what-we-ask">
+    <div class="wrap band-in">
+      <div class="band-head">
+        <p class="eyebrow">What we're asking</p>
+        <h2>Twenty minutes, and a look at how you work one overdue invoice.</h2>
+      </div>
+
+      <div class="ask">
+        <div class="ask-item"><span class="ask-n">01</span><span>A short call about how your firm handles receivables for clients today — what's manual, what's automated, and what gets dropped.</span></div>
+        <div class="ask-item"><span class="ask-n">02</span><span>If it's relevant, a screenshare of one real overdue invoice being worked, so we see the actual steps instead of guessing at them.</span></div>
+        <div class="ask-item"><span class="ask-n">03</span><span>If you want to go further, a design-partner account on one client's books, on the terms below.</span></div>
+      </div>
+
+      <div class="terms-grid">
+        <div class="term"><span class="term-v">$250/mo</span><span class="term-k">Per client account, locked for 12 months</span></div>
+        <div class="term"><span class="term-v">$0</span><span class="term-k">Implementation fee</span></div>
+        <div class="term"><span class="term-v">Cancel anytime</span><span class="term-k">No term commitment on your side</span></div>
+        <div class="term"><span class="term-v">Nothing until live</span><span class="term-k">No charge before the account is actually running</span></div>
+      </div>
+
+      <p class="prose small faint">
+        We're looking for three firms willing to shape this before public launch. If the workflow turns out
+        not to be a real problem for you, that's a useful answer too — and the call ends there.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CLOSE ============ -->
+  <section class="band" id="become-a-partner">
+    <div class="wrap close-in">
+      <div class="close-copy">
+        <p class="eyebrow">Become a design partner</p>
+        <h2 style="font-size: clamp(2rem, 5vw, 3rem);">Less chasing. More cash flow.</h2>
+        <p class="lede prose">
+          If your firm spends real hours every month working out why invoices haven't been paid, we'd like
+          to hear how you do it.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-solid" href="mailto:onyandoroy@gmail.com?subject=Octopus%20design%20partner%20&#8212;%20%5Byour%20firm%5D&amp;body=Firm%3A%0AClients%20you%20run%20AR%20for%3A%0AAccounting%20system%3A%0ABest%20time%20for%20a%2020-minute%20call%3A%0A">Start the conversation</a>
+          <a class="btn btn-line" href="mailto:onyandoroy@gmail.com?subject=Octopus%20question">Ask a question first</a>
+        </div>
+      </div>
+      <img class="close-logo" src="assets/octopus.png" width="148" height="148" alt="" aria-hidden="true">
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap colophon">
+  <span>Octopus — every invoice gets an owner</span>
+  <span>Working product concept · <a href="mailto:onyandoroy@gmail.com">onyandoroy@gmail.com</a></span>
+</footer>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
-# Octopus — landing page
+# Octto — landing page
 
-One-page site for **Octopus**, an accounts receivable teammate. Aimed at outsourced
+One-page site for **Octto**, an accounts receivable teammate. Aimed at outsourced
 accounting and AR firms, to recruit design partners.
 
 **Live:** https://codangels.github.io/invoice_r_us/
@@ -9,7 +9,7 @@ accounting and AR firms, to recruit design partners.
 
 ```
 index.html                    the whole page — no build step, no dependencies
-assets/octopus.png            logo, background flood-filled to transparent
+assets/Octto.png            logo, background flood-filled to transparent
 assets/og-card.png            1200x630 link preview card
 assets/favicon.ico            multi-res (16/32/48/64)
 assets/favicon-32.png

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Octopus — Every invoice gets an owner</title>
-<meta name="description" content="Octopus is an accounts receivable teammate that works out what is blocking payment on every unpaid invoice, prepares the next action, and follows up until the case is resolved. Now recruiting design partners among outsourced accounting and AR firms.">
-<meta name="author" content="Octopus">
+<title>Octto — Every invoice gets an owner</title>
+<meta name="description" content="Octto is an accounts receivable teammate that works out what is blocking payment on every unpaid invoice, prepares the next action, and follows up until the case is resolved. Now recruiting design partners among outsourced accounting and AR firms.">
+<meta name="author" content="Octto">
 <link rel="canonical" href="https://codangels.github.io/invoice_r_us/">
 
 <link rel="icon" href="assets/favicon.ico" sizes="any">
@@ -15,15 +15,15 @@
 <meta name="theme-color" content="#ffffff">
 
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Octopus">
-<meta property="og:title" content="Octopus — Every invoice gets an owner">
+<meta property="og:site_name" content="Octto">
+<meta property="og:title" content="Octto — Every invoice gets an owner">
 <meta property="og:description" content="An accounts receivable teammate that works out what is blocking payment, prepares the next action, and follows up until the case is resolved.">
 <meta property="og:url" content="https://codangels.github.io/invoice_r_us/">
 <meta property="og:image" content="https://codangels.github.io/invoice_r_us/assets/og-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Octopus — Every invoice gets an owner">
+<meta name="twitter:title" content="Octto — Every invoice gets an owner">
 <meta name="twitter:description" content="An accounts receivable teammate that works out what is blocking payment, prepares the next action, and follows up until the case is resolved.">
 <meta name="twitter:image" content="https://codangels.github.io/invoice_r_us/assets/og-card.png">
 
@@ -44,6 +44,12 @@
     --warn-wash:    #F6EEDC;
     --crit:         #A32121;
     --crit-wash:    #F8E8E6;
+    /* Settled/paid. 6.03:1 on its own wash, matching --crit's 6.32:1 so the
+       pill row stays tonally even. Green and red sit at near-identical
+       lightness, so every pill carries a word — colour is never the only
+       signal. */
+    --paid:         #12663C;
+    --paid-wash:    #E3F1E9;
 
     --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "URW Palladio L", Georgia, serif;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -325,6 +331,11 @@
   .pill-warn { color: var(--warn); background: var(--warn-wash); }
   .pill-good { color: var(--accent-ink); background: var(--accent-wash); }
   .pill-flat { color: var(--ink-faint); background: var(--paper-sunk); }
+  .pill-paid { color: var(--paid); background: var(--paid-wash); }
+
+  /* A settled case still shows its amount, but in green — the accounting
+     convention this page already follows for red on overdue. */
+  .chip-amt.settled { color: var(--paid); }
 
   /* ---------- blocker list ---------- */
 
@@ -582,8 +593,8 @@
 <header class="masthead">
   <div class="wrap masthead-in">
     <a class="mark" href="#become-a-partner">
-      <img src="assets/octopus.png" width="38" height="38" alt="Octopus logo">
-      <span class="mark-name">Octopus</span>
+      <img src="assets/Octto.png" width="38" height="38" alt="Octto logo">
+      <span class="mark-name">Octto</span>
     </a>
     <span class="mark-tag">Design partner program<br>Open — Fall 2026</span>
   </div>
@@ -596,13 +607,14 @@
     <p class="eyebrow">For outsourced accounting &amp; AR firms</p>
     <h1>Every invoice gets an owner.</h1>
     <p class="lede hero-sub">
-      Octopus is an accounts receivable teammate that keeps track of every unpaid invoice,
+      Octto is an accounts receivable teammate that keeps track of every unpaid invoice,
       works out what is blocking payment, prepares the next action, and keeps following up
       until the case is resolved.
     </p>
     <p class="hero-claim">
-      A finance employee has two hands. This teammate has eight — and each one keeps hold of
-      a receivable without letting the case disappear.
+      A finance employee has two hands. This teammate brings eight more — to track every
+      invoice, chase every promise, and get every dispute in front of someone who can
+      settle it.
     </p>
     <div class="cta-row">
       <a class="btn btn-solid" href="#become-a-partner">Become a design partner</a>
@@ -615,7 +627,7 @@
     <div class="rail-frame">
       <div class="rail-label">
         <span>Illustrative case queue — one client account</span>
-        <span>8 open cases · $117,195 outstanding</span>
+        <span>6 open · $72,020 outstanding &nbsp;·&nbsp; 2 settled · $45,175 collected</span>
       </div>
       <div class="rail">
 
@@ -636,19 +648,19 @@
         </article>
 
         <article class="chip">
+          <div class="chip-top"><span class="num">#18255</span><span>closed in 6 days</span></div>
+          <div class="chip-co">Harbor MSP Group</div>
+          <div class="chip-amt amt settled">$3,475</div>
+          <div class="chip-block">W-9 sent Sep 4, cleared vendor onboarding. Paid in full Sep 10.</div>
+          <span class="pill pill-paid">Paid</span>
+        </article>
+
+        <article class="chip">
           <div class="chip-top"><span class="num">#18291</span><span>41 days</span></div>
           <div class="chip-co">Ridgeline Staffing</div>
           <div class="chip-amt amt">$24,900</div>
           <div class="chip-block">Controller committed to paying on Sep 19. Verify on Sep 22.</div>
           <span class="pill pill-good">Promised</span>
-        </article>
-
-        <article class="chip">
-          <div class="chip-top"><span class="num">#18255</span><span>39 days</span></div>
-          <div class="chip-co">Harbor MSP Group</div>
-          <div class="chip-amt amt">$3,475</div>
-          <div class="chip-block">Vendor onboarding needs a current W-9 before release.</div>
-          <span class="pill pill-flat">Drafted</span>
         </article>
 
         <article class="chip">
@@ -676,11 +688,11 @@
         </article>
 
         <article class="chip">
-          <div class="chip-top"><span class="num">#18102</span><span>18 days</span></div>
+          <div class="chip-top"><span class="num">#18102</span><span>closed in 9 days</span></div>
           <div class="chip-co">Keystone Logistics</div>
-          <div class="chip-amt amt">$41,700</div>
-          <div class="chip-block">ACH scheduled for Sep 14. Follow-up cancels itself if it lands.</div>
-          <span class="pill pill-good">Promised</span>
+          <div class="chip-amt amt settled">$41,700</div>
+          <div class="chip-block">ACH cleared Sep 11. Case closed and the Sep 14 follow-up cancelled itself.</div>
+          <span class="pill pill-paid">Paid</span>
         </article>
 
       </div>
@@ -741,7 +753,7 @@
         <p class="eyebrow">The concept</p>
         <h2>A live case for every unpaid invoice.</h2>
         <p class="prose soft">
-          Octopus opens a Collection Case per invoice, and that case owns the workflow until the balance
+          Octto opens a Collection Case per invoice, and that case owns the workflow until the balance
           settles. The ledger and the inbox are inputs. The blocker, the next action, the follow-up and the
           resolution are what comes out.
         </p>
@@ -790,7 +802,7 @@
         <h2>Follow-ups expire when they stop being true.</h2>
         <p class="prose soft">
           A calendar reminder fires whether or not it still makes sense — which is how customers get chased
-          for invoices they already paid. An Octopus follow-up stays alive only while its conditions hold.
+          for invoices they already paid. An Octto follow-up stays alive only while its conditions hold.
         </p>
       </div>
 
@@ -955,7 +967,7 @@
           <div class="stat"><span class="stat-v">$38.9K</span><span class="stat-k">Promises to pay outstanding</span></div>
         </div>
         <p class="report-quote">
-          "Octopus worked 74 receivable cases this month. 41 paid cases closed for $126,420. Average
+          "Octto worked 74 receivable cases this month. 41 paid cases closed for $126,420. Average
           resolution time was 8.4 days. Twelve promises to pay worth $38,900 remain active, and six cases
           require human attention."
         </p>
@@ -972,7 +984,7 @@
       </div>
       <div class="honest">
         <p class="soft">
-          Octopus is pre-launch. Everything on this page is the workflow we intend to build, described
+          Octto is pre-launch. Everything on this page is the workflow we intend to build, described
           honestly — not a feature list you can log into this afternoon. The numbers above are examples.
         </p>
         <p class="soft">
@@ -1023,18 +1035,18 @@
           to hear how you do it.
         </p>
         <div class="cta-row">
-          <a class="btn btn-solid" href="mailto:onyandoroy@gmail.com?subject=Octopus%20design%20partner%20&#8212;%20%5Byour%20firm%5D&amp;body=Firm%3A%0AClients%20you%20run%20AR%20for%3A%0AAccounting%20system%3A%0ABest%20time%20for%20a%2020-minute%20call%3A%0A">Start the conversation</a>
-          <a class="btn btn-line" href="mailto:onyandoroy@gmail.com?subject=Octopus%20question">Ask a question first</a>
+          <a class="btn btn-solid" href="mailto:onyandoroy@gmail.com?subject=Octto%20design%20partner%20&#8212;%20%5Byour%20firm%5D&amp;body=Firm%3A%0AClients%20you%20run%20AR%20for%3A%0AAccounting%20system%3A%0ABest%20time%20for%20a%2020-minute%20call%3A%0A">Start the conversation</a>
+          <a class="btn btn-line" href="mailto:onyandoroy@gmail.com?subject=Octto%20question">Ask a question first</a>
         </div>
       </div>
-      <img class="close-logo" src="assets/octopus.png" width="148" height="148" alt="" aria-hidden="true">
+      <img class="close-logo" src="assets/Octto.png" width="148" height="148" alt="" aria-hidden="true">
     </div>
   </section>
 
 </main>
 
 <footer class="wrap colophon">
-  <span>Octopus — every invoice gets an owner</span>
+  <span>Octto — every invoice gets an owner</span>
   <span>Working product concept · <a href="mailto:onyandoroy@gmail.com">onyandoroy@gmail.com</a></span>
 </footer>
 

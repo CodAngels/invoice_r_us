@@ -4,7 +4,8 @@ from collections import deque
 from PIL import Image, ImageDraw, ImageFont
 
 SRC = r"C:\Users\onyan\Downloads\WhatsApp Image 2026-09-12 at 18.53.59.jpeg"
-OUT = r"C:\Users\onyan\.vscode\InvoiceRUS\assets"
+OUT = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "assets"))
 os.makedirs(OUT, exist_ok=True)
 
 INK = (15, 35, 64)
@@ -51,7 +52,7 @@ print("trimmed to", im.size)
 
 # upscale once with a good filter so retina headers stay crisp
 big = im.resize((im.width * 2, im.height * 2), Image.LANCZOS)
-big.save(os.path.join(OUT, "octopus.png"))
+big.save(os.path.join(OUT, "Octto.png"))
 
 
 def square(img, size, pad_ratio=0.0):
@@ -102,8 +103,17 @@ logo = big.copy()
 logo.thumbnail((190, 190), Image.LANCZOS)
 og.paste(logo, (84, 74), logo)
 
-d.text((300, 116), "OCTOPUS", font=font(["consolab.ttf", "consola.ttf"], 30),
-       fill=ACCENT)
+def tracked(draw, xy, text, fnt, fill, spacing):
+    """Draw letter-spaced text; PIL has no tracking, so step per glyph.
+    Mirrors the .mark-name rule on the page (uppercase, .22em)."""
+    x, y = xy
+    for ch in text:
+        draw.text((x, y), ch, font=fnt, fill=fill)
+        x += draw.textlength(ch, font=fnt) + spacing
+
+
+tracked(d, (300, 116), "OCTTO",
+        font(["consolab.ttf", "consola.ttf"], 30), ACCENT, 6.6)
 d.text((300, 158), "Accounts receivable teammate",
        font=font(["segoeui.ttf", "arial.ttf"], 27), fill=INK_SOFT)
 

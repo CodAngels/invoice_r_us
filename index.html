@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Octto — Every invoice gets an owner</title>
+<title>Octto: Every invoice gets an owner</title>
 <meta name="description" content="Octto is an accounts receivable teammate that works out what is blocking payment on every unpaid invoice, prepares the next action, and follows up until the case is resolved. Now recruiting design partners among outsourced accounting and AR firms.">
 <meta name="author" content="Octto">
 <link rel="canonical" href="https://codangels.github.io/invoice_r_us/">
@@ -16,14 +16,14 @@
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Octto">
-<meta property="og:title" content="Octto — Every invoice gets an owner">
+<meta property="og:title" content="Octto: Every invoice gets an owner">
 <meta property="og:description" content="An accounts receivable teammate that works out what is blocking payment, prepares the next action, and follows up until the case is resolved.">
 <meta property="og:url" content="https://codangels.github.io/invoice_r_us/">
 <meta property="og:image" content="https://codangels.github.io/invoice_r_us/assets/og-card.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Octto — Every invoice gets an owner">
+<meta name="twitter:title" content="Octto: Every invoice gets an owner">
 <meta name="twitter:description" content="An accounts receivable teammate that works out what is blocking payment, prepares the next action, and follows up until the case is resolved.">
 <meta name="twitter:image" content="https://codangels.github.io/invoice_r_us/assets/og-card.png">
 
@@ -46,7 +46,7 @@
     --crit-wash:    #F8E8E6;
     /* Settled/paid. 6.03:1 on its own wash, matching --crit's 6.32:1 so the
        pill row stays tonally even. Green and red sit at near-identical
-       lightness, so every pill carries a word — colour is never the only
+       lightness, so every pill carries a word, and colour is never the only
        signal. */
     --paid:         #12663C;
     --paid-wash:    #E3F1E9;
@@ -64,7 +64,7 @@
     color-scheme: light;
   }
 
-  /* No dark-theme overrides by design — the tokens above are the only palette,
+  /* No dark-theme overrides by design. The tokens above are the only palette,
      so a viewer's OS setting cannot repaint this page. */
 
   * { box-sizing: border-box; }
@@ -285,7 +285,7 @@
     flex-direction: column;
     gap: .45rem;
     /* Visible by default. The reveal runs `backwards`, so the faded state only
-       ever applies *during* the animation — if animations are disabled, blocked
+       ever applies *during* the animation. If animations are disabled, blocked
        or the page is printed, the cases still render. Never gate content on
        motion. */
     opacity: 1;
@@ -333,7 +333,7 @@
   .pill-flat { color: var(--ink-faint); background: var(--paper-sunk); }
   .pill-paid { color: var(--paid); background: var(--paid-wash); }
 
-  /* A settled case still shows its amount, but in green — the accounting
+  /* A settled case still shows its amount, but in green, following the
      convention this page already follows for red on overdue. */
   .chip-amt.settled { color: var(--paid); }
 
@@ -596,7 +596,7 @@
       <img src="assets/Octto.png" width="38" height="38" alt="Octto logo">
       <span class="mark-name">Octto</span>
     </a>
-    <span class="mark-tag">Design partner program<br>Open — Fall 2026</span>
+    <span class="mark-tag">Design partner program<br>Open · Fall 2026</span>
   </div>
 </header>
 
@@ -612,9 +612,9 @@
       until the case is resolved.
     </p>
     <p class="hero-claim">
-      A finance employee has two hands. This teammate brings eight more — to track every
-      invoice, chase every promise, and get every dispute in front of someone who can
-      settle it.
+      A finance employee has two hands. This teammate brings eight more. Enough to track
+      every invoice, chase every promise, and get every dispute in front of someone who
+      can settle it.
     </p>
     <div class="cta-row">
       <a class="btn btn-solid" href="#become-a-partner">Become a design partner</a>
@@ -626,7 +626,7 @@
   <section class="wrap" style="padding-bottom: clamp(2.5rem, 6vw, 4rem);">
     <div class="rail-frame">
       <div class="rail-label">
-        <span>Illustrative case queue — one client account</span>
+        <span>Illustrative case queue · one client account</span>
         <span>6 open · $72,020 outstanding &nbsp;·&nbsp; 2 settled · $45,175 collected</span>
       </div>
       <div class="rail">
@@ -643,7 +643,7 @@
           <div class="chip-top"><span class="num">#18344</span><span>48 days</span></div>
           <div class="chip-co">Belmont Facilities</div>
           <div class="chip-amt amt">$6,180</div>
-          <div class="chip-block">AP never received it — original went to a contact who left.</div>
+          <div class="chip-block">AP never received it. The original went to a contact who left.</div>
           <span class="pill pill-crit">Blocked</span>
         </article>
 
@@ -712,7 +712,7 @@
           come back to check.
         </p>
         <p class="prose soft">
-          Invoices don't simply become overdue. They get stuck — behind a missing PO, a wrong contact, a
+          Invoices don't simply become overdue. They get stuck; behind a missing PO, a wrong contact, a
           dispute, a forgotten promise, a document nobody sent, or a teammate who never replied.
         </p>
       </div>
@@ -774,7 +774,7 @@
           <div class="case-row">
             <span class="case-key">Next action</span>
             <span class="case-val">Update the invoice and resend to AP.
-              <span class="case-note">Drafted and waiting in your queue — nothing sends on its own.</span></span>
+              <span class="case-note">Drafted and waiting in your queue; nothing sends on its own.</span></span>
           </div>
           <div class="case-row">
             <span class="case-key">Follow-up</span>
@@ -801,7 +801,7 @@
         <p class="eyebrow">Why this isn't a reminder tool</p>
         <h2>Follow-ups expire when they stop being true.</h2>
         <p class="prose soft">
-          A calendar reminder fires whether or not it still makes sense — which is how customers get chased
+          A calendar reminder fires whether or not it still makes sense; which is how customers get chased
           for invoices they already paid. An Octto follow-up stays alive only while its conditions hold.
         </p>
       </div>
@@ -917,7 +917,7 @@
         <p class="prose soft">
           A single company sees its own aging report. Your firm sees a dozen of them, across different
           industries, with different customers who get stuck in different ways. That makes you the fastest
-          way to learn what this workflow actually looks like — and the hardest customer to fool.
+          way to learn what this workflow actually looks like; and the hardest customer to fool.
         </p>
       </div>
 
@@ -932,7 +932,7 @@
         </div>
         <div class="point">
           <span class="point-name">A month-end artifact you can hand to the client</span>
-          <span class="point-body">Cases closed, cash collected, average resolution time, promises still outstanding — a record of the work, separated from credits, write-offs and duplicates.</span>
+          <span class="point-body">Cases closed, cash collected, average resolution time, promises still outstanding. A record of the work, separated from credits, write-offs and duplicates.</span>
         </div>
         <div class="point">
           <span class="point-name">Built around the cases that need a human</span>
@@ -957,7 +957,7 @@
 
       <div class="report">
         <div class="report-bar">
-          <span>Month-end summary — one client account</span>
+          <span>Month-end summary · one client account</span>
           <span class="report-flag">Illustrative · not customer results</span>
         </div>
         <div class="stats">
@@ -985,7 +985,7 @@
       <div class="honest">
         <p class="soft">
           Octto is pre-launch. Everything on this page is the workflow we intend to build, described
-          honestly — not a feature list you can log into this afternoon. The numbers above are examples.
+          honestly, not a feature list you can log into this afternoon. The numbers above are examples.
         </p>
         <p class="soft">
           We're doing the market investigation before the product hardens around assumptions, because the
@@ -1005,7 +1005,7 @@
       </div>
 
       <div class="ask">
-        <div class="ask-item"><span class="ask-n">01</span><span>A short call about how your firm handles receivables for clients today — what's manual, what's automated, and what gets dropped.</span></div>
+        <div class="ask-item"><span class="ask-n">01</span><span>A short call about how your firm handles receivables for clients today: what's manual, what's automated, and what gets dropped.</span></div>
         <div class="ask-item"><span class="ask-n">02</span><span>If it's relevant, a screenshare of one real overdue invoice being worked, so we see the actual steps instead of guessing at them.</span></div>
         <div class="ask-item"><span class="ask-n">03</span><span>If you want to go further, a design-partner account on one client's books, on the terms below.</span></div>
       </div>
@@ -1019,7 +1019,7 @@
 
       <p class="prose small faint">
         We're looking for three firms willing to shape this before public launch. If the workflow turns out
-        not to be a real problem for you, that's a useful answer too — and the call ends there.
+        not to be a real problem for you, that's a useful answer too, and the call ends there.
       </p>
     </div>
   </section>
@@ -1046,7 +1046,7 @@
 </main>
 
 <footer class="wrap colophon">
-  <span>Octto — every invoice gets an owner</span>
+  <span>Octto · every invoice gets an owner</span>
   <span>Working product concept · <a href="mailto:onyandoroy@gmail.com">onyandoroy@gmail.com</a></span>
 </footer>
 

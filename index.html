@@ -49,7 +49,10 @@
        lightness, so every pill carries a word, and colour is never the only
        signal. */
     --paid:         #12663C;
-    --paid-wash:    #E3F1E9;
+    /* Pill wash is deeper than the settled-card ground so the pill still
+       reads as a patch on top of it (1.17:1 apart) instead of dissolving. */
+    --paid-wash:    #D6EADF;
+    --paid-tint:    #F1F8F4;
 
     --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", "URW Palladio L", Georgia, serif;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -337,6 +340,24 @@
      convention this page already follows for red on overdue. */
   .chip-amt.settled { color: var(--paid); }
 
+  /* Days past due is the first number an AR person scans, so it carries the
+     standard aging buckets instead of sitting as quiet grey. The number itself
+     is the data; colour only repeats it, so nothing is lost without it. */
+  .chip-age {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: .78rem;
+    white-space: nowrap;
+  }
+  .age-cur  { color: var(--ink-soft); }  /* 0 to 30 days  */
+  .age-mid  { color: var(--warn); }      /* 31 to 60      */
+  .age-late { color: var(--crit); }      /* 61 and over   */
+  .age-done { color: var(--paid); }      /* settled, no longer aging */
+
+  /* A settled case should read as done from across the room. */
+  .chip-settled { background: var(--paid-tint); }
+
   /* ---------- blocker list ---------- */
 
   .blockers {
@@ -582,6 +603,12 @@
 
   @media print {
     .chip { opacity: 1; animation: none; }
+    /* Browsers drop background colour when printing, which would erase the
+       settled state and the pill washes. Keep them. */
+    .chip-settled, .pill {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
     .btn { border-color: var(--rule-strong); color: var(--ink); background: none; }
   }
 </style>
@@ -632,7 +659,7 @@
       <div class="rail">
 
         <article class="chip">
-          <div class="chip-top"><span class="num">#18372</span><span>62 days</span></div>
+          <div class="chip-top"><span class="num">#18372</span><span class="chip-age age-late">62 days</span></div>
           <div class="chip-co">ACME Corp</div>
           <div class="chip-amt amt">$18,420</div>
           <div class="chip-block">PO 88219 must appear on the invoice before AP will process it.</div>
@@ -640,15 +667,15 @@
         </article>
 
         <article class="chip">
-          <div class="chip-top"><span class="num">#18344</span><span>48 days</span></div>
+          <div class="chip-top"><span class="num">#18344</span><span class="chip-age age-mid">48 days</span></div>
           <div class="chip-co">Belmont Facilities</div>
           <div class="chip-amt amt">$6,180</div>
           <div class="chip-block">AP never received it. The original went to a contact who left.</div>
           <span class="pill pill-crit">Blocked</span>
         </article>
 
-        <article class="chip">
-          <div class="chip-top"><span class="num">#18255</span><span>closed in 6 days</span></div>
+        <article class="chip chip-settled">
+          <div class="chip-top"><span class="num">#18255</span><span class="chip-age age-done">closed in 6 days</span></div>
           <div class="chip-co">Harbor MSP Group</div>
           <div class="chip-amt amt settled">$3,475</div>
           <div class="chip-block">W-9 sent Sep 4, cleared vendor onboarding. Paid in full Sep 10.</div>
@@ -656,7 +683,7 @@
         </article>
 
         <article class="chip">
-          <div class="chip-top"><span class="num">#18291</span><span>41 days</span></div>
+          <div class="chip-top"><span class="num">#18291</span><span class="chip-age age-mid">41 days</span></div>
           <div class="chip-co">Ridgeline Staffing</div>
           <div class="chip-amt amt">$24,900</div>
           <div class="chip-block">Controller committed to paying on Sep 19. Verify on Sep 22.</div>
@@ -664,7 +691,7 @@
         </article>
 
         <article class="chip">
-          <div class="chip-top"><span class="num">#18240</span><span>35 days</span></div>
+          <div class="chip-top"><span class="num">#18240</span><span class="chip-age age-mid">35 days</span></div>
           <div class="chip-co">Cortez Wholesale</div>
           <div class="chip-amt amt">$11,060</div>
           <div class="chip-block">Disputes the quantity on line 3. Needs a human decision.</div>
@@ -672,7 +699,7 @@
         </article>
 
         <article class="chip">
-          <div class="chip-top"><span class="num">#18198</span><span>29 days</span></div>
+          <div class="chip-top"><span class="num">#18198</span><span class="chip-age age-cur">29 days</span></div>
           <div class="chip-co">Sunbelt Mechanical</div>
           <div class="chip-amt amt">$9,320</div>
           <div class="chip-block">Customer says the scope changed. Waiting on Sales to confirm.</div>
@@ -680,15 +707,15 @@
         </article>
 
         <article class="chip">
-          <div class="chip-top"><span class="num">#18177</span><span>24 days</span></div>
+          <div class="chip-top"><span class="num">#18177</span><span class="chip-age age-cur">24 days</span></div>
           <div class="chip-co">Vista Grounds Co.</div>
           <div class="chip-amt amt">$2,140</div>
           <div class="chip-block">Asked for a full statement before releasing the batch.</div>
           <span class="pill pill-flat">Drafted</span>
         </article>
 
-        <article class="chip">
-          <div class="chip-top"><span class="num">#18102</span><span>closed in 9 days</span></div>
+        <article class="chip chip-settled">
+          <div class="chip-top"><span class="num">#18102</span><span class="chip-age age-done">closed in 9 days</span></div>
           <div class="chip-co">Keystone Logistics</div>
           <div class="chip-amt amt settled">$41,700</div>
           <div class="chip-block">ACH cleared Sep 11. Case closed and the Sep 14 follow-up cancelled itself.</div>
